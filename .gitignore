@@ -163,6 +163,7 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,node
 
 ### md-to-pdf project ###
-# Generated PDFs and temp render files (keep example screenshots, not the generated PDF)
+# Generated PDFs and temp render files, except the versioned example output
 *.pdf
+!example/demo.pdf
 *.tmp-*.html
