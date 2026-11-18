@@ -1,58 +1,58 @@
 ---
-title: "Documento de Demostración - md-to-pdf"
-author: "Equipo de Documentación"
+title: "md-to-pdf Demo Document"
+author: "Documentation Team"
 date: "2026-11-17"
 tags: "demo, markdown, pdf"
 version: "1.0"
 ---
 
-# Documento de Demostración
+# Demo Document
 
-Este archivo sirve para probar de punta a punta las capacidades de **md-to-pdf**: frontmatter,
-callouts estilo GitHub, y diagramas renderizados vía Mermaid y Kroki (PlantUML y DBML).
+This file exercises the full pipeline of **md-to-pdf** end to end: frontmatter,
+GitHub-style callouts, and diagrams rendered via Mermaid and Kroki (PlantUML and DBML).
 
-Genera el PDF con:
+Generate the PDF with:
 
 ```powershell
 node build-pdf.mjs --frontmatter example\demo.md
 ```
 
-## Callouts (alertas estilo GitHub)
+## Callouts (GitHub-style alerts)
 
 > [!NOTE]
-> Esta es una nota informativa. Se usa para aclarar o dar contexto adicional sin que sea crítico.
+> This is an informational note. Use it to clarify or add extra context without being critical.
 
 > [!TIP]
-> Este es un consejo útil, por ejemplo: usa `--h1-new-page` si quieres que cada sección principal
-> empiece en una página nueva.
+> This is a helpful tip, for example: use `--h1-new-page` if you want every top-level section to
+> start on a new page.
 
 > [!IMPORTANT]
-> Esta información es relevante para el correcto uso de la herramienta y no debería pasarse por alto.
+> This information is relevant for correct use of the tool and shouldn't be overlooked.
 
 > [!WARNING]
-> Ten cuidado: si tu red corporativa bloquea `kroki.io` o `unpkg.com`, los diagramas de esta
-> página no se renderizarán.
+> Be careful: if your corporate network blocks `kroki.io` or `unpkg.com`, the diagrams on this
+> page won't render.
 
 > [!CAUTION]
-> Esta acción puede tener consecuencias negativas si no se siguen los pasos correctamente.
+> This action can have negative consequences if the steps aren't followed correctly.
 
 <!-- page-break -->
 
-## Diagrama de secuencia (Mermaid)
+## Sequence diagram (Mermaid)
 
 ```mermaid
 sequenceDiagram
-    participant U as Usuario
+    participant U as User
     participant CLI as build-pdf.mjs
     participant B as Chromium (Puppeteer)
     U->>CLI: node build-pdf.mjs demo.md
-    CLI->>CLI: Parsear Markdown + frontmatter
-    CLI->>B: Renderizar HTML
-    B-->>CLI: PDF generado
+    CLI->>CLI: Parse Markdown + frontmatter
+    CLI->>B: Render HTML
+    B-->>CLI: Generated PDF
     CLI-->>U: demo.pdf
 ```
 
-## Diagrama de componentes (PlantUML)
+## Component diagram (PlantUML)
 
 ```plantuml
 @startuml
@@ -66,11 +66,11 @@ package "md-to-pdf" {
 }
 
 [puppeteer-core] --> [Chromium / Edge]
-[Kroki API] --> [Diagrama SVG]
+[Kroki API] --> [SVG diagram]
 @enduml
 ```
 
-## Esquema de base de datos (DBML)
+## Database schema (DBML)
 
 ```dbml
 Table users {
@@ -99,7 +99,7 @@ Table document_tags {
 }
 ```
 
-## Cierre
+## Wrap-up
 
-Con esto quedan cubiertos los cuatro elementos principales del pipeline: **frontmatter**,
-**callouts**, **diagramas Mermaid** y **diagramas vía Kroki** (PlantUML y DBML en este ejemplo).
+This covers the four main elements of the pipeline: **frontmatter**, **callouts**,
+**Mermaid diagrams**, and **diagrams via Kroki** (PlantUML and DBML in this example).
