@@ -14,7 +14,7 @@ Converts Markdown to PDF with a clean, self-contained pipeline (markdown-it pars
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 22.12+ (required by `puppeteer-core` 25.x)
 - Microsoft Edge or Chrome installed (auto-detected; used as the headless printing engine)
 - Internet during generation for: mermaid (unpkg CDN) and Kroki diagrams (kroki.io)
 

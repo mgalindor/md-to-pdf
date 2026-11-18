@@ -321,7 +321,7 @@ async function toPdf(mdFile) {
   try {
     const browser = await puppeteer.launch({
       executablePath: EDGE,
-      headless: "new",
+      headless: true,
       args: ["--no-sandbox", "--disable-gpu"],
     });
     const page = await browser.newPage();
