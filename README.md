@@ -7,7 +7,7 @@ Converts Markdown to PDF with a clean, self-contained pipeline (markdown-it pars
 - Clean rendering: consistent typography, tables, blockquotes, and syntax highlighting
 - **Mermaid**: diagrams rendered as real graphics
 - **~35 diagram types via Kroki**: `plantuml`, `dbml`, `dot`/graphviz, `bpmn`, `c4`, `d2`, `act`, `erb`, `excalidraw`, `flowchart`, `nomnoml`, `sql`, `vega`, etc. (see `KROKI_TYPES` in `build-pdf.mjs`)
-- **GitHub alerts**: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` with colors and icons
+- **GitHub style alerts**: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` with colors and icons
 - **YAML frontmatter**: hidden by default; optionally shown as a discreet table
 - **Page breaks**: manual (`<!-- page-break -->`) and automatic per H1/H2
 - Accepts individual files and folders (with or without recursion)
@@ -49,6 +49,13 @@ node build-pdf.mjs docs\                           # all .md files in docs\
 node build-pdf.mjs --recursive docs\               # includes subfolders
 node build-pdf.mjs --out pdf\ docs\ notes.md       # folder + file → pdf\
 node build-pdf.mjs --frontmatter --h2-new-page doc.md
+
+# Using the npm script instead of calling node directly
+npm run pdf -- --frontmatter example\demo.md
+
+# Installed globally (via `npm link`) as the `mdtopdf` command
+npm link
+mdtopdf --frontmatter example\demo.md
 ```
 
 ## Page breaks
@@ -88,23 +95,54 @@ Table users { id int [pk] }
 
 To add a new type: one line in the `KROKI_TYPES` map in `build-pdf.mjs` (`language: "kroki-type"` per https://kroki.io). Languages not listed render as regular highlighted code.
 
+## Example
+
+[example/demo.md](example/demo.md) exercises the full pipeline in a single document: YAML
+frontmatter, the five GitHub-style callouts, a Mermaid sequence diagram, a PlantUML component
+diagram, and a DBML schema. Generate it with:
+
+```powershell
+node build-pdf.mjs --frontmatter example\demo.md
+```
+
+Preview of the resulting PDF:
+
+![Frontmatter table and callouts](example/demo-1.png)
+![Mermaid sequence diagram and PlantUML component diagram](example/demo-2.png)
+![DBML schema diagram](example/demo-3.png)
+
 ## Structure
 
 ```
 md-to-pdf/
 ├── build-pdf.mjs      # main script
 ├── package.json
+├── LICENSE
 ├── styles/            # CSS (markdown.css, markdown-pdf.css, code-highlighting-tomorrow.css)
-└── template/          # HTML template
+├── template/          # HTML template
+└── example/           # sample demo.md + PDF preview screenshots
 ```
 
 The tool is fully self-contained: it ships its own styles and template.
+
+## Powered by
+
+- [markdown-it](https://github.com/markdown-it/markdown-it) — Markdown parsing
+- [markdown-it-emoji](https://github.com/markdown-it/markdown-it-emoji) — `:emoji:` shortcodes
+- [highlight.js](https://github.com/highlightjs/highlight.js) — syntax highlighting (Tomorrow theme)
+- [Puppeteer](https://pptr.dev/) (`puppeteer-core`) — drives Chromium/Edge headlessly to print the PDF
+- [Mermaid](https://mermaid.js.org/) — diagrams rendered client-side via CDN
+- [Kroki](https://kroki.io/) — renders PlantUML, DBML, Graphviz, and ~30 other diagram languages as SVG
 
 ## Notes
 
 - The document title comes from the `title` field of the frontmatter (if present); otherwise the file name is used.
 - Footer: page number "X / Y". Header: none.
 - In corporate environments, if your proxy blocks kroki.io or unpkg.com, diagrams will not load (the rest of the document is still generated).
- 
+
+## License
+
+[BSD 3-Clause](LICENSE)
+
 
 
