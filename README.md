@@ -12,6 +12,22 @@ Converts Markdown to PDF with a clean, self-contained pipeline (markdown-it pars
 - **Page breaks**: manual (`<!-- page-break -->`) and automatic per H1/H2
 - Accepts individual files and folders (with or without recursion)
 
+## Example
+
+[example/demo.md](example/demo.md) exercises the full pipeline in a single document: YAML
+frontmatter, the five GitHub-style callouts, a Mermaid sequence diagram, a PlantUML component
+diagram, and a DBML schema. Generate it with:
+
+```powershell
+node build-pdf.mjs --frontmatter example\demo.md
+```
+
+Preview of the resulting PDF:
+
+![Frontmatter table and callouts](example/demo-1.png)
+![Mermaid sequence diagram and PlantUML component diagram](example/demo-2.png)
+![DBML schema diagram](example/demo-3.png)
+
 ## Requirements
 
 - Node.js 22.12+ (required by `puppeteer-core` 25.x)
@@ -58,20 +74,6 @@ npm link
 mdtopdf --frontmatter example\demo.md
 ```
 
-## Page breaks
-
-Manual — write it on its own line where you want the break:
-
-```markdown
-Previous text...
-
-<!-- page-break -->
-
-## Section starting on a new page
-```
-
-Automatic — with the `--h1-new-page` / `--h2-new-page` flags. If a heading is already at the top of a page, no blank page is generated.
-
 ## Diagrams
 
 Code blocks whose language is listed in `KROKI_TYPES` are converted to SVG images from kroki.io:
@@ -95,21 +97,49 @@ Table users { id int [pk] }
 
 To add a new type: one line in the `KROKI_TYPES` map in `build-pdf.mjs` (`language: "kroki-type"` per https://kroki.io). Languages not listed render as regular highlighted code.
 
-## Example
+## Alerts
 
-[example/demo.md](example/demo.md) exercises the full pipeline in a single document: YAML
-frontmatter, the five GitHub-style callouts, a Mermaid sequence diagram, a PlantUML component
-diagram, and a DBML schema. Generate it with:
+GitHub-style callouts, written as a blockquote whose first line is one of the five supported tags:
 
-```powershell
-node build-pdf.mjs --frontmatter example\demo.md
+```markdown
+> [!NOTE]
+> Useful information that users should know, even when skimming content.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
 ```
 
-Preview of the resulting PDF:
+Each type gets its own color and icon (see the preview in [Example](#example)). You can also give a
+callout a custom title instead of the default one, e.g. `> [!NOTE] Heads up`.
 
-![Frontmatter table and callouts](example/demo-1.png)
-![Mermaid sequence diagram and PlantUML component diagram](example/demo-2.png)
-![DBML schema diagram](example/demo-3.png)
+## Page breaks
+
+Manual — write it on its own line where you want the break:
+
+```markdown
+Previous text...
+
+<!-- page-break -->
+
+## Section starting on a new page
+```
+
+Automatic — with the `--h1-new-page` / `--h2-new-page` flags. If a heading is already at the top of a page, no blank page is generated.
+
+## Notes
+
+- The document title comes from the `title` field of the frontmatter (if present); otherwise the file name is used.
+- Footer: page number "X / Y". Header: none.
+- In corporate environments, if your proxy blocks kroki.io or unpkg.com, diagrams will not load (the rest of the document is still generated).
 
 ## Structure
 
@@ -134,15 +164,6 @@ The tool is fully self-contained: it ships its own styles and template.
 - [Mermaid](https://mermaid.js.org/) — diagrams rendered client-side via CDN
 - [Kroki](https://kroki.io/) — renders PlantUML, DBML, Graphviz, and ~30 other diagram languages as SVG
 
-## Notes
-
-- The document title comes from the `title` field of the frontmatter (if present); otherwise the file name is used.
-- Footer: page number "X / Y". Header: none.
-- In corporate environments, if your proxy blocks kroki.io or unpkg.com, diagrams will not load (the rest of the document is still generated).
-
 ## License
 
 [BSD 3-Clause](LICENSE)
-
-
-
