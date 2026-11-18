@@ -1,0 +1,110 @@
+# md-to-pdf
+
+Converts Markdown to PDF with a clean, self-contained pipeline (markdown-it parser + highlight.js + Chromium printing engine). No pandoc.
+
+## Features
+
+- Clean rendering: consistent typography, tables, blockquotes, and syntax highlighting
+- **Mermaid**: diagrams rendered as real graphics
+- **~35 diagram types via Kroki**: `plantuml`, `dbml`, `dot`/graphviz, `bpmn`, `c4`, `d2`, `act`, `erb`, `excalidraw`, `flowchart`, `nomnoml`, `sql`, `vega`, etc. (see `KROKI_TYPES` in `build-pdf.mjs`)
+- **GitHub alerts**: `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` with colors and icons
+- **YAML frontmatter**: hidden by default; optionally shown as a discreet table
+- **Page breaks**: manual (`<!-- page-break -->`) and automatic per H1/H2
+- Accepts individual files and folders (with or without recursion)
+
+## Requirements
+
+- Node.js 18+
+- Microsoft Edge or Chrome installed (auto-detected; used as the headless printing engine)
+- Internet during generation for: mermaid (unpkg CDN) and Kroki diagrams (kroki.io)
+
+## Installation
+
+```powershell
+cd md-to-pdf
+npm install
+```
+
+## Usage
+
+```powershell
+node build-pdf.mjs <file.md | folder> [...] [flags]
+```
+
+| Argument / Flag | Description |
+|---|---|
+| `<file.md>` | File to convert (relative or absolute paths) |
+| `<folder>` | Converts all `.md` files in the folder (can be mixed with files) |
+| `--frontmatter` | Shows the frontmatter as a discreet table at the top (hidden by default) |
+| `--h1-new-page` | Each H1 starts on a new page |
+| `--h2-new-page` | Each H2 starts on a new page |
+| `--recursive` | When given a folder, includes subfolders |
+| `--out <folder>` | Saves the PDFs to that folder (created if it doesn't exist). By default each PDF is written next to its `.md` |
+
+### Examples
+
+```powershell
+node build-pdf.mjs doc.md                          # doc.pdf next to the .md
+node build-pdf.mjs docs\                           # all .md files in docs\
+node build-pdf.mjs --recursive docs\               # includes subfolders
+node build-pdf.mjs --out pdf\ docs\ notes.md       # folder + file → pdf\
+node build-pdf.mjs --frontmatter --h2-new-page doc.md
+```
+
+## Page breaks
+
+Manual — write it on its own line where you want the break:
+
+```markdown
+Previous text...
+
+<!-- page-break -->
+
+## Section starting on a new page
+```
+
+Automatic — with the `--h1-new-page` / `--h2-new-page` flags. If a heading is already at the top of a page, no blank page is generated.
+
+## Diagrams
+
+Code blocks whose language is listed in `KROKI_TYPES` are converted to SVG images from kroki.io:
+
+````markdown
+```mermaid
+sequenceDiagram
+    A->>B: hello
+```
+
+```plantuml
+@startuml
+Alice -> Bob: hello
+@enduml
+```
+
+```dbml
+Table users { id int [pk] }
+```
+````
+
+To add a new type: one line in the `KROKI_TYPES` map in `build-pdf.mjs` (`language: "kroki-type"` per https://kroki.io). Languages not listed render as regular highlighted code.
+
+## Structure
+
+```
+md-to-pdf/
+├── build-pdf.mjs      # main script
+├── package.json
+├── styles/            # CSS (markdown.css, markdown-pdf.css, code-highlighting-tomorrow.css)
+└── template/          # HTML template
+```
+
+The tool is fully self-contained: it ships its own styles and template.
+
+## Notes
+
+- The document title comes from the `title` field of the frontmatter (if present); otherwise the file name is used.
+- Footer: page number "X / Y". Header: none.
+- In corporate environments, if your proxy blocks kroki.io or unpkg.com, diagrams will not load (the rest of the document is still generated).
+ 
+
+
