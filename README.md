@@ -22,7 +22,7 @@ diagram, and a DBML schema. Generate it with:
 node build-pdf.mjs --frontmatter example\demo.md
 ```
 
-Preview of the resulting PDF:
+Preview of the resulting PDF ([example/demo.pdf](example/demo.pdf)):
 
 ![Frontmatter table and callouts](example/demo-1.png)
 ![Mermaid sequence diagram and PlantUML component diagram](example/demo-2.png)
